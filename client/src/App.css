@@ -1,0 +1,588 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #fce4ec;;
+  color: #2d2a35;
+  min-height: 100vh;
+}
+
+/* ── Page Layout ── */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 28px 20px 60px;
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  color: #2d2a35;
+  line-height: 1;
+}
+
+.page-sub {
+  font-size: 12px;
+  color: #8b7b8f;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+
+.add-btn {
+  background: #8b5cf6;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background: #7c4ae6;
+}
+
+/* ── Form ── */
+.form-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 24px rgba(139, 92, 246, 0.1);
+}
+
+.form-title {
+  font-size: 13px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 14px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-grid-full {
+  grid-column: 1 / -1;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  background: #f7f5ff;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2d2a35;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  border-color: #8b5cf6;
+}
+
+/* ── Stats Row ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.stat-card {
+  border-radius: 18px;
+  padding: 18px 20px;
+}
+
+.stat-label {
+  font-size: 11px;
+  color: #a888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.stat-val {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+/* ── Insight Row (Day 6) ── */
+.insight-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.insight-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.insight-label {
+  font-size: 11px;
+  color: #a888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Charts Row ── */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.mid-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px 22px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
+}
+
+.card-title {
+  font-size: 11px;
+  color: #a888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+}
+
+.empty {
+  font-size: 13px;
+  color: #ccc;
+  text-align: center;
+  padding: 20px 0;
+}
+
+/* ── Legend ── */
+.leg-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.leg-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.leg-name {
+  flex: 1;
+  color: #888;
+  text-transform: capitalize;
+}
+
+.leg-amt {
+  font-weight: 500;
+  color: #2d2a35;
+}
+
+/* ── Budget Bar ── */
+.budget-track {
+  background: #f0ece4;
+  border-radius: 6px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.budget-fill {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s;
+}
+
+/* ── Filters (Day 7) ── */
+.filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-input {
+  background: #f7f5ff;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #2d2a35;
+  outline: none;
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-input:focus {
+  border-color: #8b5cf6;
+}
+
+.date-range-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.date-range-group label {
+  font-size: 12px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+
+.date-range-group input {
+  flex: 1;
+  min-width: 140px;
+}
+
+.sort-control {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sort-btn {
+  background: #f7f5ff;
+  border: 1.5px solid #ede9fe;
+  border-radius: 12px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #2d2a35;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sort-btn.active {
+  background: #8b5cf6;
+  color: #fff;
+  border-color: #8b5cf6;
+}
+
+.sort-btn:hover {
+  border-color: #8b5cf6;
+}
+
+/* ── Expense List ── */
+.exp-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f5f3ef;
+}
+
+.exp-row:last-child {
+  border-bottom: none;
+}
+
+.exp-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.exp-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #2d2a35;
+}
+
+.exp-meta {
+  font-size: 11px;
+  color: #bbb;
+  margin-top: 2px;
+  text-transform: capitalize;
+}
+
+.exp-amt {
+  font-size: 14px;
+  font-weight: 600;
+  color: #d45ba1;
+}
+
+.exp-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.exp-action-btn {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.exp-action-btn.edit {
+  color: #8b5cf6;
+}
+
+.exp-action-btn.delete {
+  color: #e05252;
+}
+
+.exp-action-btn:hover {
+  opacity: 0.7;
+}
+
+/* ── Color backgrounds ── */
+.stat-income {
+  background: #e8effe;
+}
+
+.stat-expense {
+  background: #fdeef3;
+}
+
+.stat-balance {
+  background: #edfbf3;
+}
+
+.color-income {
+  color: #5b7fff;
+}
+
+.color-expense {
+  color: #d45ba1;
+}
+
+.color-balance-positive {
+  color: #34c77b;
+}
+
+.color-balance-negative {
+  color: #e05252;
+}
+
+/* ── Export Button ── */
+.export-btn {
+  background: #34c77b;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.export-btn:hover {
+  background: #2aab68;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .page {
+    padding: 20px 16px 40px;
+  }
+
+  .page-title {
+    font-size: 26px;
+  }
+
+  .stats-row,
+  .insight-row {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-row,
+  .mid-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    flex-direction: column;
+  }
+
+  .filter-input,
+  .date-range-group input {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .date-range-group {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* ── Animations ── */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.header {
+  animation: slideInDown 0.5s ease-out;
+}
+
+.form-card {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.card {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.stat-card {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.insight-card {
+  animation: scaleIn 0.5s ease-out;
+}
+
+.exp-row {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Hover effects */
+.card:hover {
+  box-shadow: 0 8px 32px rgba(139, 92, 246, 0.12);
+  transition: box-shadow 0.3s ease;
+}
+
+.add-btn:active {
+  transform: scale(0.98);
+}
+
+.sort-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+  transition: all 0.2s ease;
+}
+
+.export-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 199, 123, 0.15);
+  transition: all 0.2s ease;
+}
+
+.exp-action-btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+/* Loading pulse */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Smooth number transitions */
+.stat-val {
+  transition: color 0.3s ease;
+}
+
+.budget-fill {
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
