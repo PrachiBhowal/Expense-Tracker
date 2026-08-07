@@ -91,7 +91,7 @@ export default function Login({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const endpoint = isSignup 
         ? `${API_URL}/api/auth/signup` 
         : `${API_URL}/api/auth/login`;

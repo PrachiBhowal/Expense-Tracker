@@ -29,7 +29,7 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
 
   const fetchSubscriptions = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
         credentials: "include"
       });
@@ -55,7 +55,7 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -80,7 +80,7 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
 
   const handleCharge = async (id) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions/${id}/charge`, {
         method: "POST",
         credentials: "include"
@@ -103,7 +103,7 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
   const handleDelete = async (id) => {
     if (confirm("Delete this subscription?")) {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
         const res = await fetch(`${API_URL}/api/subscriptions/${id}`, {
           method: "DELETE",
           credentials: "include"

@@ -95,7 +95,7 @@ export default function App() {
 
   const checkLoginStatus = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/auth/me`, {
         credentials: 'include'
       });
@@ -115,7 +115,7 @@ export default function App() {
 
   const handleLogout = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       await fetch(`${API_URL}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include'
@@ -140,7 +140,7 @@ export default function App() {
 
   const fetchSubscriptions = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
         credentials: 'include'
       });
