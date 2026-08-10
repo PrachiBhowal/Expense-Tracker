@@ -22,7 +22,7 @@ app.use(session({
 }));
 
 app.use(cors({ 
-  origin: 'https://expense-tracker-five-zeta-58.vercel.app/',
+  origin: 'https://expense-tracker-five-zeta-58.vercel.app',
   credentials: true 
 }));
 app.use(express.json());
