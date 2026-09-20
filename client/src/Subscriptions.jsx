@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { authHeaders, API_URL } from "./utils/auth";
+import { getSubscriptions, createSubscription, chargeSubscription, deleteSubscription } from "./api/subscriptions";
 import "./Subscriptions.css";
 
 const SUB_COLORS = {
@@ -30,14 +30,8 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
 
   const fetchSubscriptions = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/subscriptions`, {
-        credentials: "include",
-        headers: authHeaders()
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSubscriptions(data);
-      }
+      const res = await getSubscriptions();
+      setSubscriptions(res.data);
     } catch (err) {
       console.error(err);
     }
@@ -56,70 +50,39 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
     }
 
     try {
-      const res = await fetch(`${API_URL}/api/subscriptions`, {
-        method: "POST",
-        headers: authHeaders(),
-        credentials: "include",
-        body: JSON.stringify({ ...form, amount: Number(form.amount) })
-      });
-
-      if (res.ok) {
-        setForm({ name: "", amount: "", category: "entertainment", billingCycle: "monthly" });
-        setShowForm(false);
-        fetchSubscriptions();
-        if (onSubscriptionsUpdated) onSubscriptionsUpdated();
-      } else {
-        const data = await res.json();
-        alert(data.error || "Failed to create subscription");
-      }
+      await createSubscription({ ...form, amount: Number(form.amount) });
+      setForm({ name: "", amount: "", category: "entertainment", billingCycle: "monthly" });
+      setShowForm(false);
+      fetchSubscriptions();
+      if (onSubscriptionsUpdated) onSubscriptionsUpdated();
     } catch (err) {
       console.error(err);
-      alert("Network error. Please try again.");
+      alert(err.response?.data?.error || "Failed to create subscription");
     }
   };
 
   const handleCharge = async (id) => {
     try {
-      const res = await fetch(`${API_URL}/api/subscriptions/${id}/charge`, {
-        method: "POST",
-        credentials: "include",
-        headers: authHeaders()
-      });
-
-      if (res.ok) {
-        toast.success("Charged successfully!");
-        fetchSubscriptions(); // ✅ Refresh subscriptions
-        if (onExpensesUpdated) onExpensesUpdated(); // ✅ Refresh expenses in parent
-      } else {
-        const data = await res.json();
-        toast.error(data.error || "Failed to charge");
-      }
+      await chargeSubscription(id);
+      toast.success("Charged successfully!");
+      fetchSubscriptions();
+      if (onExpensesUpdated) onExpensesUpdated();
     } catch (err) {
       console.error(err);
-      toast.error("Error charging subscription");
+      toast.error(err.response?.data?.error || "Failed to charge");
     }
   };
 
   const handleDelete = async (id) => {
     if (confirm("Delete this subscription?")) {
       try {
-        const res = await fetch(`${API_URL}/api/subscriptions/${id}`, {
-          method: "DELETE",
-          credentials: "include",
-          headers: authHeaders()
-        });
-
-        if (res.ok) {
-          toast.success("Subscription deleted!");
-          fetchSubscriptions(); // ✅ Refresh subscriptions
-          if (onExpensesUpdated) onExpensesUpdated(); // ✅ Refresh expenses in parent
-        } else {
-          const data = await res.json();
-          toast.error(data.error || "Failed to delete");
-        }
+        await deleteSubscription(id);
+        toast.success("Subscription deleted!");
+        fetchSubscriptions();
+        if (onExpensesUpdated) onExpensesUpdated();
       } catch (err) {
         console.error(err);
-        toast.error("Error deleting subscription");
+        toast.error(err.response?.data?.error || "Failed to delete");
       }
     }
   };

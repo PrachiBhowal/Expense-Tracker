@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import Login from "./Login";
 import Subscriptions from "./Subscriptions";
 import { getExpenses, createExpense, deleteExpense, updateExpense } from "./api/expenses";
-import { authHeaders, API_URL } from "./utils/auth";
+import { getSubscriptions } from "./api/subscriptions";
+import { API_URL } from "./utils/auth";
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -151,14 +152,8 @@ export default function App() {
 
   const fetchSubscriptions = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/subscriptions`, {
-        credentials: 'include',
-        headers: authHeaders()
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSubscriptions(data);
-      }
+      const res = await getSubscriptions();
+      setSubscriptions(res.data);
     } catch (err) {
       console.error("Failed to fetch subscriptions", err);
     }
