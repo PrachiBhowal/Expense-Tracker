@@ -20,7 +20,7 @@ const generateVerificationCode = () => {
 
 const sendVerificationEmail = async (email, verificationCode) => {
   const mailOptions = {
-    from: 'noreply@expensetracker.com',
+    from: `Expense Tracker <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Verify Your Email - Expense Tracker',
     html: `
@@ -39,14 +39,14 @@ const sendVerificationEmail = async (email, verificationCode) => {
     await transporter.sendMail(mailOptions);
     console.log(`Verification email sent to ${email}`);
   } catch (err) {
-    console.error('Email send error:', err);
-    throw new Error('Failed to send verification email');
+    console.error('Email send error details:', err.message, err.code, err.response);
+    throw new Error(`Failed to send verification email: ${err.message}`);
   }
 };
 
 const sendPasswordResetEmail = async (email, resetCode) => {
   const mailOptions = {
-    from: 'noreply@expensetracker.com',
+    from: `Expense Tracker <${process.env.EMAIL_USER}>`,
     to: email,
     subject: 'Reset Your Password - Expense Tracker',
     html: `
@@ -66,8 +66,8 @@ const sendPasswordResetEmail = async (email, resetCode) => {
     await transporter.sendMail(mailOptions);
     console.log(`Password reset email sent to ${email}`);
   } catch (err) {
-    console.error('Email send error:', err);
-    throw new Error('Failed to send password reset email');
+    console.error('Password reset email error details:', err.message, err.code, err.response);
+    throw new Error(`Failed to send password reset email: ${err.message}`);
   }
 };
 
