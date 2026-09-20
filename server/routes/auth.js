@@ -19,24 +19,43 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
     }
 
-    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-    if (existingUser) {
-      return res.status(400).json({ message: 'Email or username already in use' });
-    }
-
     const verificationCode = generateVerificationCode();
     const verificationCodeExpires = new Date(Date.now() + 600000);
 
-    const user = new User({
-      username,
-      email,
-      password,
-      verificationCode,
-      verificationCodeExpires
-    });
-    await user.save();
+    const existingUser = await User.findOne({ $or: [{ email }, { username }] });
 
-    await sendVerificationEmail(email, verificationCode);
+    // If user exists and is already verified, block registration
+    if (existingUser && existingUser.emailVerified) {
+      return res.status(400).json({ message: 'Email or username already in use' });
+    }
+
+    let user;
+    if (existingUser && !existingUser.emailVerified) {
+      // User exists but never verified — update their code and resend
+      existingUser.verificationCode = verificationCode;
+      existingUser.verificationCodeExpires = verificationCodeExpires;
+      existingUser.password = password;
+      await existingUser.save();
+      user = existingUser;
+    } else {
+      user = new User({
+        username,
+        email,
+        password,
+        verificationCode,
+        verificationCodeExpires
+      });
+      await user.save();
+    }
+
+    try {
+      await sendVerificationEmail(email, verificationCode);
+    } catch (emailErr) {
+      // If email fails and this was a new user, clean up so they can retry
+      if (!existingUser) await User.deleteOne({ _id: user._id });
+      console.error('Signup email error:', emailErr);
+      return res.status(500).json({ message: 'Account created but failed to send verification email. Please try again.' });
+    }
 
     res.status(201).json({
       message: 'Account created! Check your email for the verification code.',
