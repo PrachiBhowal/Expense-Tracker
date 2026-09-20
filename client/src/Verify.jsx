@@ -31,7 +31,12 @@ export default function Verify({ email, onVerifySuccess }) {
       }
 
       setSuccess(true);
-      setTimeout(() => onVerifySuccess(), 1500);
+      // Store JWT token so subsequent requests are authenticated
+      if (data.token) {
+        localStorage.setItem('authToken', data.token);
+        localStorage.setItem('authUsername', data.username);
+      }
+      setTimeout(() => onVerifySuccess(data.username), 1500);
     } catch (err) {
       setError("Network error. Please try again.");
       console.error(err);

@@ -14,6 +14,11 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     console.log(`📤 ${config.method.toUpperCase()} ${config.url}`);
+    // Attach JWT token if available
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
   },
   (error) => {
@@ -33,7 +38,8 @@ axiosInstance.interceptors.response.use(
     console.error(`❌ ${error.response?.status} - ${message}`);
     
     if (error.response?.status === 401) {
-      // Redirect to login on unauthorized
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('authUsername');
       window.location.href = '/login';
     }
     

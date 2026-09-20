@@ -96,8 +96,13 @@ export default function App() {
   const checkLoginStatus = async () => {
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
+      const token = localStorage.getItem('authToken');
+      const headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
       const res = await fetch(`${API_URL}/api/auth/me`, {
-        credentials: 'include'
+        credentials: 'include',
+        headers
       });
       if (res.ok) {
         const data = await res.json();
@@ -105,6 +110,9 @@ export default function App() {
         setIsLoggedIn(true);
         fetchExpenses();
         fetchSubscriptions();
+      } else {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('authUsername');
       }
     } catch (err) {
       console.log('Not logged in');
@@ -120,6 +128,8 @@ export default function App() {
         method: 'POST',
         credentials: 'include'
       });
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('authUsername');
       setIsLoggedIn(false);
       setUsername("");
       setExpenses([]);
@@ -352,7 +362,12 @@ export default function App() {
   }
 
   if (!isLoggedIn) {
-    return <Login onLoginSuccess={() => checkLoginStatus()} />;
+    return <Login onLoginSuccess={(username) => {
+      setUsername(username || localStorage.getItem('authUsername') || '');
+      setIsLoggedIn(true);
+      fetchExpenses();
+      fetchSubscriptions();
+    }} />;
   }
 
   return (

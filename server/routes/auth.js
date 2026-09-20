@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { sendVerificationEmail, generateVerificationCode, sendPasswordResetEmail } = require('../utils/email');
 
@@ -102,10 +103,17 @@ router.post('/verify-email', async (req, res) => {
     req.session.userId = user._id;
     req.session.username = user.username;
 
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     res.json({
       message: 'Email verified successfully!',
       username: user.username,
-      userId: user._id
+      userId: user._id,
+      token
     });
   } catch (err) {
     console.error('Verify email error:', err);
@@ -143,10 +151,17 @@ router.post('/login', async (req, res) => {
     req.session.userId = user._id;
     req.session.username = user.username;
 
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
     res.json({
       message: 'Logged in successfully',
       username: user.username,
-      userId: user._id
+      userId: user._id,
+      token
     });
   } catch (err) {
     console.error('Login error:', err);
@@ -239,16 +254,26 @@ router.post('/logout', (req, res) => {
   });
 });
 
-// GET current user
+// GET current user — checks JWT token (works across Render restarts)
 router.get('/me', (req, res) => {
-  if (req.session.userId) {
-    res.json({
-      userId: req.session.userId,
-      username: req.session.username
-    });
-  } else {
-    res.status(401).json({ message: 'Not logged in' });
+  // Check JWT from Authorization header first (stateless, survives restarts)
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    try {
+      const token = authHeader.substring(7);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      return res.json({ userId: decoded.id, username: decoded.username });
+    } catch (err) {
+      // Token invalid/expired — fall through to session check
+    }
   }
+
+  // Fallback: check session
+  if (req.session.userId) {
+    return res.json({ userId: req.session.userId, username: req.session.username });
+  }
+
+  res.status(401).json({ message: 'Not logged in' });
 });
 
 module.exports = router;

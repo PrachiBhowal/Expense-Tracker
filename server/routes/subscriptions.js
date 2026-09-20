@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const Subscription = require('../models/Subscription');
 const Expense = require('../models/Expense');
-const sessionMiddleware = require('../middleware/sessionMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.use(sessionMiddleware);
+router.use(authMiddleware);
 
 // GET all subscriptions
 router.get('/', async (req, res) => {

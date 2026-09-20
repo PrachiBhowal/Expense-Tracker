@@ -132,7 +132,12 @@ export default function Login({ onLoginSuccess }) {
         setVerifyEmail(form.email);
         setNeedsVerification(true);
       } else {
-        onLoginSuccess();
+        // Store JWT token for authenticated API calls
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+          localStorage.setItem('authUsername', data.username);
+        }
+        onLoginSuccess(data.username);
       }
     } catch (err) {
       setError("Network error. Please try again.");
