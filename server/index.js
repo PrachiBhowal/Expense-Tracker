@@ -32,31 +32,26 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is working!' });
 });
 
-// Email test route - visit this URL to test Gmail auth
+// Email test route - visit this URL to test Resend API
 app.get('/api/test-email', async (req, res) => {
   try {
-    const nodemailer = require('nodemailer');
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
+    const { Resend } = require('resend');
+    if (!process.env.RESEND_API_KEY) {
+      return res.status(500).json({ success: false, error: 'RESEND_API_KEY not set on server' });
+    }
+    const resend = new Resend(process.env.RESEND_API_KEY);
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
+      to: process.env.EMAIL_USER || 'test@example.com',
+      subject: 'Test Email - Expense Tracker',
+      html: '<p>If you see this, Resend is working!</p>'
     });
-    await transporter.verify();
-    res.json({ 
-      success: true, 
-      message: 'Gmail auth is working!',
-      emailUser: process.env.EMAIL_USER 
-    });
+    if (error) {
+      return res.status(500).json({ success: false, error: error.message, details: error });
+    }
+    res.json({ success: true, message: 'Resend is working!', data });
   } catch (err) {
-    res.status(500).json({ 
-      success: false, 
-      error: err.message,
-      code: err.code,
-      emailUser: process.env.EMAIL_USER,
-      hasPassword: !!process.env.EMAIL_PASS
-    });
+    res.status(500).json({ success: false, error: err.message, code: err.code });
   }
 });
 
