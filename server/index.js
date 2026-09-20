@@ -32,6 +32,34 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is working!' });
 });
 
+// Email test route - visit this URL to test Gmail auth
+app.get('/api/test-email', async (req, res) => {
+  try {
+    const nodemailer = require('nodemailer');
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+    await transporter.verify();
+    res.json({ 
+      success: true, 
+      message: 'Gmail auth is working!',
+      emailUser: process.env.EMAIL_USER 
+    });
+  } catch (err) {
+    res.status(500).json({ 
+      success: false, 
+      error: err.message,
+      code: err.code,
+      emailUser: process.env.EMAIL_USER,
+      hasPassword: !!process.env.EMAIL_PASS
+    });
+  }
+});
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/expenses', require('./routes/expenses'));
