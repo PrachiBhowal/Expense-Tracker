@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Login from "./Login";
 import Subscriptions from "./Subscriptions";
 import { getExpenses, createExpense, deleteExpense, updateExpense } from "./api/expenses";
+import { authHeaders, API_URL } from "./utils/auth";
 import {
   PieChart, Pie, Cell, ResponsiveContainer,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -150,9 +151,9 @@ export default function App() {
 
   const fetchSubscriptions = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
-        credentials: 'include'
+        credentials: 'include',
+        headers: authHeaders()
       });
       if (res.ok) {
         const data = await res.json();

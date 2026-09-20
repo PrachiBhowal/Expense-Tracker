@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { authHeaders, API_URL } from "./utils/auth";
 import "./Subscriptions.css";
 
 const SUB_COLORS = {
@@ -29,9 +30,9 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
 
   const fetchSubscriptions = async () => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
-        credentials: "include"
+        credentials: "include",
+        headers: authHeaders()
       });
       if (res.ok) {
         const data = await res.json();
@@ -55,10 +56,9 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
     }
 
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         credentials: "include",
         body: JSON.stringify({ ...form, amount: Number(form.amount) })
       });
@@ -80,10 +80,10 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
 
   const handleCharge = async (id) => {
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
       const res = await fetch(`${API_URL}/api/subscriptions/${id}/charge`, {
         method: "POST",
-        credentials: "include"
+        credentials: "include",
+        headers: authHeaders()
       });
 
       if (res.ok) {
@@ -103,10 +103,10 @@ export default function Subscriptions({ onExpensesUpdated, onSubscriptionsUpdate
   const handleDelete = async (id) => {
     if (confirm("Delete this subscription?")) {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'https://expense-tracker-api-xrxj.onrender.com';
         const res = await fetch(`${API_URL}/api/subscriptions/${id}`, {
           method: "DELETE",
-          credentials: "include"
+          credentials: "include",
+          headers: authHeaders()
         });
 
         if (res.ok) {
