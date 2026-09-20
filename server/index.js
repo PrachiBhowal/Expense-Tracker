@@ -32,26 +32,27 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is working!' });
 });
 
-// Email test route - visit this URL to test Resend API
+// Email test route - visit this URL to test Brevo API
 app.get('/api/test-email', async (req, res) => {
   try {
-    const { Resend } = require('resend');
-    if (!process.env.RESEND_API_KEY) {
-      return res.status(500).json({ success: false, error: 'RESEND_API_KEY not set on server' });
+    const axios = require('axios');
+    if (!process.env.BREVO_API_KEY) {
+      return res.status(500).json({ success: false, error: 'BREVO_API_KEY not set on server' });
     }
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'onboarding@resend.dev',
-      to: process.env.EMAIL_USER || 'test@example.com',
+    const response = await axios.post('https://api.brevo.com/v3/smtp/email', {
+      sender: { name: 'Expense Tracker', email: process.env.EMAIL_FROM || 'expensetracker75@gmail.com' },
+      to: [{ email: process.env.EMAIL_USER || 'test@test.com' }],
       subject: 'Test Email - Expense Tracker',
-      html: '<p>If you see this, Resend is working!</p>'
+      htmlContent: '<p>If you see this, Brevo is working! You can now send emails to anyone.</p>'
+    }, {
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'Content-Type': 'application/json'
+      }
     });
-    if (error) {
-      return res.status(500).json({ success: false, error: error.message, details: error });
-    }
-    res.json({ success: true, message: 'Resend is working!', data });
+    res.json({ success: true, message: 'Brevo is working! Email sent to anyone.', data: response.data });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message, code: err.code });
+    res.status(500).json({ success: false, error: err.response?.data?.message || err.message });
   }
 });
 
